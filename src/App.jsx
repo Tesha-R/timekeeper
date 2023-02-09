@@ -10,12 +10,12 @@ import CloseFilled from './assets/CloseFilled.svg';
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
   const [isShowing, setIsShowing] = useState(false); // show and hide form
-  const [targetLocation, setTargetLocation] = useState([]); // set new location
+  const [targetLocation, setTargetLocation] = useState(); // set new location
   // hold array of locations data
   const [targetData, setTargetData] = useState(() => {
     const saved = localStorage.getItem('targetData');
     const locations = JSON.parse(saved);
-    return locations;
+    return locations || '';
   });
 
   const [baseLocation, setBaseLocation] = useState(() => {
