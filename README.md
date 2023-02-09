@@ -4,4 +4,4 @@ Timekeeper is an application to help you visualize time across different time zo
 
 ## Screenshots
 
-![App Screenshot](screenshot.png)
+![App Screenshot](public/screenshot.png)

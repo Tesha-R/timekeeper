@@ -13,7 +13,8 @@ export default function App() {
   const [targetLocation, setTargetLocation] = useState(); // set new location
   // hold array of locations data
   const [targetData, setTargetData] = useState(() => {
-    const locations = JSON.parse(localStorage.getItem('targetData') || []);
+    const saved = localStorage.getItem('targetData');
+    const locations = JSON.parse(saved);
     return locations;
   });
 
