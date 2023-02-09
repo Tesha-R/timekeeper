@@ -10,12 +10,12 @@ import CloseFilled from './assets/CloseFilled.svg';
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
   const [isShowing, setIsShowing] = useState(false); // show and hide form
-  const [targetLocation, setTargetLocation] = useState(); // set new location
+  const [targetLocation, setTargetLocation] = useState(''); // set new location
   // hold array of locations data
   const [targetData, setTargetData] = useState(() => {
     const saved = localStorage.getItem('targetData');
     const locations = JSON.parse(saved);
-    return locations || '';
+    return locations || [''];
   });
 
   const [baseLocation, setBaseLocation] = useState(() => {
@@ -39,6 +39,7 @@ export default function App() {
   }
   useEffect(() => {
     const timerId = setInterval(refreshClock, 1000);
+    //console.log('date', date);
     return function cleanup() {
       clearInterval(timerId);
     };
@@ -115,15 +116,15 @@ export default function App() {
           </button>
         </div>
         <p className="text-6xl sm:text-7xl  text-white mb-2">
-          {formatInTimeZone(date, `${item.timezone_location}`, 'h:mm:ss a')}
+          {formatInTimeZone(date, item.timezone_location, 'h:mm:ss a')}
         </p>
         <p className="text-gray-400 text-3xl font-light">
-          {formatInTimeZone(date, `${item.timezone_location}`, 'E, LLL d')}
+          {formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
         </p>
       </div>
     );
   });
-
+  //console.log('date', date);
   return (
     <div className="App">
       <div className="container mx-auto">

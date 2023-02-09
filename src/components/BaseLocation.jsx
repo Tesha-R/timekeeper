@@ -32,7 +32,7 @@ function BaseLocation(props) {
         console.log('BL isShowing true', props.isShowing);
       });
   }
-
+  //console.log('props.date', props.date);
   return (
     <div className="base-location">
       <div className="flex items-center">
@@ -46,8 +46,8 @@ function BaseLocation(props) {
                 </p>
                 <p className="mr-2 text-3xl">
                   {formatInTimeZone(
-                    new Date(),
-                    `${props.baseData?.timezone_location}`,
+                    props.date,
+                    props.baseData?.timezone_location,
                     'E, LLL d h:mm:ss a'
                   )}
                 </p>
