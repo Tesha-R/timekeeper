@@ -94,7 +94,7 @@ export default function App() {
     console.log('isDeleted', isDeleted);
   }
 
-  const timeItems = targetData.map((item, index) => {
+  const timeItems = targetData?.map((item, index) => {
     return (
       <div className="time-el bg-gray-dark p-7 rounded-lg">
         <div className="flex items-start justify-between">
