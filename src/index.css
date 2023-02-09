@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  background-color: #0e0f10;
+}
+
+.time-content span,
+.location span {
+  color: #979797;
+}
+
+
+input[type=text] {
+  display: block;
+  border-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
