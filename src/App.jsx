@@ -99,9 +99,12 @@ export default function App() {
     return (
       <div className="time-el bg-gray-dark p-7 rounded-lg">
         <div className="flex items-start justify-between">
-          <p className="location text-2xl text-gray-200 mb-2 basis-6/7 font-light">
+          <p className="capitalize location text-2xl text-gray-200 mb-2 basis-6/7 font-light">
             {item.requested_location}
-            <span className="text-2xl text-gray-700"> {item.gmt_offset}</span>
+            <span className="text-2xl text-gray-700">
+              {' '}
+              {item.timezone_abbreviation}
+            </span>
           </p>
           <button
             onClick={handleDeleteTimeItems}
@@ -115,10 +118,18 @@ export default function App() {
             />
           </button>
         </div>
-        <p className="text-6xl sm:text-7xl  text-white mb-2">
-          {formatInTimeZone(date, item.timezone_location, 'h:mm:ss a')}
+
+        <p className="text-6xl sm:text-7xl  text-white mb-2 lowercase flex items-center ">
+          {' '}
+          {`${formatInTimeZone(date, item.timezone_location, 'h')}`}{' '}
+          <span className="animate-pulse pb-3">{`${formatInTimeZone(
+            date,
+            item.timezone_location,
+            ':'
+          )}`}</span>
+          {formatInTimeZone(date, item.timezone_location, 'mm a')}
         </p>
-        <p className="text-gray-400 text-3xl font-light">
+        <p className="text-gray-400 text-2xl font-light md:text-3xl">
           {formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
         </p>
       </div>
