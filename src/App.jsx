@@ -39,7 +39,6 @@ export default function App() {
   }
   useEffect(() => {
     const timerId = setInterval(refreshClock, 1000);
-    //console.log('date', date);
     return function cleanup() {
       clearInterval(timerId);
     };
@@ -69,7 +68,6 @@ export default function App() {
   function onChangeTargetLocation(event) {
     setTargetLocation(event.target.value);
   }
-  //console.log('import.meta.env.API_URL', import.meta.env.VITE_API_URL);
 
   function getTargetLocation(event) {
     event.preventDefault();

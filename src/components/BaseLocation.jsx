@@ -1,5 +1,6 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
+import MapPin from '../assets/MapPin.svg';
 
 function BaseLocation(props) {
   function getUserLocation() {
@@ -10,13 +11,12 @@ function BaseLocation(props) {
         }`
       )
       .then((response) => {
-        console.log('response', response.data.region);
+        // console.log('response', response.data.region);
         props.setBaseLocation(response.data.region);
       });
   }
 
   function getBaseTimeData(event) {
-    event.preventDefault();
     axios
       .get(
         `https://timezone.abstractapi.com/v1/current_time?api_key=${
@@ -25,13 +25,11 @@ function BaseLocation(props) {
       )
       .then((response) => {
         localStorage.setItem('baseData', JSON.stringify(response.data));
-        localStorage.setItem(
-          'baseLocation',
-          JSON.stringify(response.data.requested_location)
-        );
+        // localStorage.setItem(
+        //   'baseLocation',
+        //   JSON.stringify(response.data.requested_location)
+        // );
         props.setBaseData(response.data);
-        props.setIsShowing(true);
-        console.log('BL isShowing true', props.isShowing);
       });
   }
 
@@ -44,6 +42,10 @@ function BaseLocation(props) {
             {' '}
             {props.baseData?.timezone_abbreviation}
           </span>
+        </p>
+        <p>
+          {' '}
+          <img src={MapPin} className="w-8 text-gray-300" alt="map pin icon" />
         </p>
       </div>
       <p className="text-6xl sm:text-7xl  text-white mb-2 lowercase flex items-center ">
