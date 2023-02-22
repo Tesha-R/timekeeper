@@ -142,18 +142,7 @@ export default function App() {
         <h1 className="logo text-white text-3xl py-7 font-bold">TimeKeeper</h1>
         <div className="main p-10 bg-gray-medium rounded-lg ">
           <div className="pb-10 grid grid-cols-1 col-auto md:grid-cols-1 lg:grid-cols-2 gap-8">
-            {
-              <BaseLocation
-                baseLocation={baseLocation}
-                setBaseLocation={setBaseLocation}
-                baseData={baseData}
-                setBaseData={setBaseData}
-                isShowing={isShowing}
-                setIsShowing={setIsShowing}
-                date={date}
-              />
-            }
-            <div className="target-location space-x-0 items-center justify-end lg:flex md:max-xl:flex-col sm:space-x-3">
+            <div className="target-location space-x-0 items-center justify-start lg:flex md:max-xl:flex-col sm:space-x-3">
               <form
                 className="flex items-center mb-3 sm:mb-0"
                 onSubmit={getTargetLocation}
@@ -179,6 +168,15 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {
+              <BaseLocation
+                baseLocation={baseLocation}
+                setBaseLocation={setBaseLocation}
+                baseData={baseData}
+                setBaseData={setBaseData}
+                date={date}
+              />
+            }
             {timeItems}
           </div>
         </div>
