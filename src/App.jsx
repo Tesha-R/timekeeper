@@ -9,7 +9,6 @@ import CloseFilled from './assets/CloseFilled.svg';
 
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
-  const [isShowing, setIsShowing] = useState(false); // show and hide form
   const [targetLocation, setTargetLocation] = useState(''); // set new location
 
   // hold array of locations data
@@ -19,11 +18,7 @@ export default function App() {
     return locations || [''];
   });
 
-  const [baseLocation, setBaseLocation] = useState(() => {
-    const saved = localStorage.getItem('baseLocation');
-    const initial = JSON.parse(saved);
-    return initial || '';
-  });
+  const [baseLocation, setBaseLocation] = useState('');
 
   // all base location data saved in local storage
   const [baseData, setBaseData] = useState(() => {
@@ -32,6 +27,30 @@ export default function App() {
     return initial || '';
   });
 
+  useEffect(() => {
+    if (!baseLocation) {
+      console.log('baseLocation', baseLocation);
+      getUserLocation();
+    }
+  }, []);
+
+  async function getUserLocation() {
+    try {
+      const response = await axios.get(
+        `https://extreme-ip-lookup.com/json/?key=${
+          import.meta.env.VITE_API_IP_URL
+        }`
+      );
+      const userData = response;
+      setBaseLocation(userData.data.region);
+
+      console.log('response getUserLocation', userData.data.region);
+      console.log('baseData getUserLocation', baseData);
+      console.log('baseLocation getUserLocation', baseLocation);
+    } catch (error) {
+      console.log('ERROR - getUserLocation', error);
+    }
+  }
   // CLOCK
   const [date, setDate] = useState(new Date());
 
@@ -43,13 +62,6 @@ export default function App() {
     return function cleanup() {
       clearInterval(timerId);
     };
-  }, []);
-  // stay rendered on refresh
-  useEffect(() => {
-    localStorage.getItem('baseLocation');
-    if (baseLocation) {
-      setIsShowing(true);
-    }
   }, []);
 
   // save new locations in local storage everytime state changes
@@ -90,6 +102,7 @@ export default function App() {
       });
     console.log('targetLocation', targetLocation);
     console.log('targetData', targetData);
+    setTargetLocation('');
   }
 
   // delete time items
@@ -182,7 +195,7 @@ export default function App() {
                 date={date}
               />
             }
-            {timeItems}
+            {targetData && timeItems}
           </div>
         </div>
       </div>

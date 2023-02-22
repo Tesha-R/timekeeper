@@ -1,35 +1,32 @@
+import { useEffect } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
 import MapPin from '../assets/MapPin.svg';
-import { useEffect } from 'react';
 
 function BaseLocation(props) {
   useEffect(() => {
-    axios
-      .get(
-        `https://extreme-ip-lookup.com/json/?key=${
-          import.meta.env.VITE_API_IP_URL
-        }`
-      )
-      .then((response) => {
-        console.log('response', response.data.region);
-        props.setBaseLocation(response.data.region);
-      });
+    if (props.baseLocation) {
+      getUserCurrentTime();
+    }
   }, []);
 
-  useEffect(() => {
-    axios
-      .get(
-        `https://timezone.abstractapi.com/v1/current_time?api_key=${
-          import.meta.env.VITE_API_URL
-        }&location=${props.baseLocation}`
-      )
-      .then((response) => {
-        localStorage.setItem('baseData', JSON.stringify(response.data));
-        console.log('response', response.data);
-        props.setBaseData(response.data);
-      });
-  }, []);
+  async function getUserCurrentTime() {
+    try {
+      const response = await axios
+        .get(
+          `https://timezone.abstractapi.com/v1/current_time?api_key=${
+            import.meta.env.VITE_API_URL
+          }&location=${props.baseLocation}`
+        )
+        .then((response) => {
+          props.setBaseData(response.data);
+          localStorage.setItem('baseData', JSON.stringify(response.data));
+          console.log('response baseData getUserCurrentTime', response.data);
+        });
+    } catch (error) {
+      console.log('ERROR - getUserCurrentTime', error);
+    }
+  }
 
   return (
     <div className="time-el bg-gray-dark p-7 rounded-lg">
