@@ -11,6 +11,7 @@ export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
   const [isShowing, setIsShowing] = useState(false); // show and hide form
   const [targetLocation, setTargetLocation] = useState(''); // set new location
+
   // hold array of locations data
   const [targetData, setTargetData] = useState(() => {
     const saved = localStorage.getItem('targetData');
@@ -82,7 +83,13 @@ export default function App() {
           ...prevstate,
           response.data.target_location,
         ]);
+        console.log(
+          'response.data.target_location',
+          response.data.target_location
+        );
       });
+    console.log('targetLocation', targetLocation);
+    console.log('targetData', targetData);
   }
 
   // delete time items

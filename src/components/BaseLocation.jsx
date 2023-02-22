@@ -1,9 +1,10 @@
 import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
 import MapPin from '../assets/MapPin.svg';
+import { useEffect } from 'react';
 
 function BaseLocation(props) {
-  function getUserLocation() {
+  useEffect(() => {
     axios
       .get(
         `https://extreme-ip-lookup.com/json/?key=${
@@ -11,12 +12,12 @@ function BaseLocation(props) {
         }`
       )
       .then((response) => {
-        // console.log('response', response.data.region);
+        console.log('response', response.data.region);
         props.setBaseLocation(response.data.region);
       });
-  }
+  }, []);
 
-  function getBaseTimeData(event) {
+  useEffect(() => {
     axios
       .get(
         `https://timezone.abstractapi.com/v1/current_time?api_key=${
@@ -25,13 +26,10 @@ function BaseLocation(props) {
       )
       .then((response) => {
         localStorage.setItem('baseData', JSON.stringify(response.data));
-        // localStorage.setItem(
-        //   'baseLocation',
-        //   JSON.stringify(response.data.requested_location)
-        // );
+        console.log('response', response.data);
         props.setBaseData(response.data);
       });
-  }
+  }, []);
 
   return (
     <div className="time-el bg-gray-dark p-7 rounded-lg">
