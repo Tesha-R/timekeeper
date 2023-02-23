@@ -7,7 +7,6 @@ function BaseLocation(props) {
   // get baseLocation from input field
   const onChangeBaseLocation = (event) => {
     props.setBaseLocation(event.target.value);
-    console.log('props.setBaseLocation', props.setBaseLocation);
   };
   // use baseLocation to request time
   function getBaseTimeData(event) {
@@ -26,7 +25,6 @@ function BaseLocation(props) {
           JSON.stringify(response.data.requested_location)
         );
         props.setIsShowing(false);
-        console.log('BL isShowing true', props.isShowing);
       });
   }
   // delete baseLocation data / show and hide form
@@ -77,7 +75,7 @@ function BaseLocation(props) {
             </p>
             <p>
               <button
-                onClick={() => handleDeleteBaseData}
+                onClick={() => handleDeleteBaseData()}
                 className="button basis-1/7 text-gray-600 hover:bg-sky-700"
               >
                 <img

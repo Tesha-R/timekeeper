@@ -65,13 +65,11 @@ export default function App() {
   // save updated locations in localStorage everytime state changes
   useEffect(() => {
     localStorage.setItem('targetData', JSON.stringify(targetData));
-    //setIsDeleted(false);
   }, [isDeleted]);
 
   // get targetLocation from input field
   function onChangeTargetLocation(event) {
     setTargetLocation(event.target.value);
-    console.log('targetLocation', targetLocation);
   }
   // use baseLocation and targetLocation to request time
   function getTargetLocation(event) {
