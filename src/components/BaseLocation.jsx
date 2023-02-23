@@ -1,16 +1,50 @@
+import { useState, useEffect } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
 import MapPin from '../assets/MapPin.svg';
 import CloseFilled from '../assets/CloseFilled.svg';
 
+let didInit = false;
+
 function BaseLocation(props) {
+  const [locationLookUp, setLocationLookUp] = useState('');
+
   // get baseLocation from input field
   const onChangeBaseLocation = (event) => {
     props.setBaseLocation(event.target.value);
   };
+
+  useEffect(() => {
+    if (!didInit) {
+      didInit = true;
+      getLocationLookUp();
+      getBaseTimeData();
+    }
+  }, []);
+
+  // get baseLocation automatically once on load
+  function getLocationLookUp() {
+    axios
+      .get(
+        `https://extreme-ip-lookup.com/json/?key=${
+          import.meta.env.VITE_API_IP_URL
+        }`
+      )
+      .then((response) => {
+        setLocationLookUp(response.data.region);
+        props.setBaseLocation(response.data.region);
+        localStorage.setItem(
+          'baseLocation',
+          JSON.stringify(response.data.region)
+        );
+      });
+  }
+
   // use baseLocation to request time
   function getBaseTimeData(event) {
-    event.preventDefault();
+    if (event && event.preventDefault) {
+      event.preventDefault();
+    }
     axios
       .get(
         `https://timezone.abstractapi.com/v1/current_time?api_key=${
@@ -27,6 +61,7 @@ function BaseLocation(props) {
         props.setIsShowing(false);
       });
   }
+
   // delete baseLocation data / show and hide form
   function handleDeleteBaseData() {
     props.setIsShowing(true);
@@ -38,26 +73,29 @@ function BaseLocation(props) {
   return (
     <>
       {props.isShowing ? (
-        <form
-          className="flex flex-col justify-center"
-          onSubmit={getBaseTimeData}
-        >
-          <label className="text-gray-200 mr-2 text-2xl font-light mb-2">
-            Current location
-          </label>
-          <div className="flex items-center flex-col sm:flex-row">
-            <input
-              type="text"
-              name="user-base-location"
-              onChange={onChangeBaseLocation}
-              className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half 
+        <div className="bg-gray-dark p-7 rounded-lg">
+          <form
+            className="flex flex-col justify-center "
+            onSubmit={getBaseTimeData}
+          >
+            <label className="text-gray-200 mr-2 text-2xl font-light mb-2">
+              Current location
+            </label>
+            <div className="flex items-center flex-col sm:flex-row">
+              <input
+                type="text"
+                name="user-base-location"
+                onChange={onChangeBaseLocation}
+                placeholder="Current location"
+                className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half 
                 rounded-l-md focus:ring-1  px-5 py-2"
-            />
-            <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
-              Get time
-            </button>
-          </div>
-        </form>
+              />
+              <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
+                Get time
+              </button>
+            </div>
+          </form>
+        </div>
       ) : (
         <div className="time-el bg-gray-dark p-7 rounded-lg">
           <div className="flex items-start justify-between">

@@ -17,7 +17,7 @@ export default function App() {
   const [baseLocation, setBaseLocation] = useState(() => {
     const saved = localStorage.getItem('baseLocation');
     const locations = JSON.parse(saved);
-    return locations || [''];
+    return locations || '';
   });
 
   // save array of new locations data in localStorage
@@ -71,6 +71,7 @@ export default function App() {
   function onChangeTargetLocation(event) {
     setTargetLocation(event.target.value);
   }
+
   // use baseLocation and targetLocation to request time
   function getTargetLocation(event) {
     event.preventDefault();
