@@ -9,49 +9,32 @@ import CloseFilled from './assets/CloseFilled.svg';
 
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
-  const [targetLocation, setTargetLocation] = useState(''); // set new location
+  const [isShowing, setIsShowing] = useState(false); // show form for baseLocation
 
-  // hold array of locations data
-  const [targetData, setTargetData] = useState(() => {
-    const saved = localStorage.getItem('targetData');
+  const [targetLocation, setTargetLocation] = useState(''); // set new targetLocation
+
+  // set new baseLocation
+  const [baseLocation, setBaseLocation] = useState(() => {
+    const saved = localStorage.getItem('baseLocation');
     const locations = JSON.parse(saved);
     return locations || [''];
   });
 
-  const [baseLocation, setBaseLocation] = useState('');
-
-  // all base location data saved in local storage
-  const [baseData, setBaseData] = useState(() => {
-    const saved = localStorage.getItem('baseData');
-    const initial = JSON.parse(saved);
-    return initial || '';
+  // save array of new locations data in localStorage
+  const [targetData, setTargetData] = useState(() => {
+    const saved = localStorage.getItem('targetData');
+    const locations = JSON.parse(saved);
+    return locations || [];
   });
 
-  useEffect(() => {
-    if (!baseLocation) {
-      console.log('baseLocation', baseLocation);
-      getUserLocation();
-    }
-  }, []);
+  // save base location data in localStorage to render
+  const [baseData, setBaseData] = useState(() => {
+    const saved = localStorage.getItem('baseData');
+    const locations = JSON.parse(saved);
+    return locations || '';
+  });
 
-  async function getUserLocation() {
-    try {
-      const response = await axios.get(
-        `https://extreme-ip-lookup.com/json/?key=${
-          import.meta.env.VITE_API_IP_URL
-        }`
-      );
-      const userData = response;
-      setBaseLocation(userData.data.region);
-
-      console.log('response getUserLocation', userData.data.region);
-      console.log('baseData getUserLocation', baseData);
-      console.log('baseLocation getUserLocation', baseLocation);
-    } catch (error) {
-      console.log('ERROR - getUserLocation', error);
-    }
-  }
-  // CLOCK
+  // // CLOCK
   const [date, setDate] = useState(new Date());
 
   function refreshClock() {
@@ -64,24 +47,33 @@ export default function App() {
     };
   }, []);
 
-  // save new locations in local storage everytime state changes
+  // get updated locations in localStorage everytime state changes
+  useEffect(() => {
+    JSON.parse(localStorage.getItem('baseData'));
+  }, [baseData]);
+
+  // save new locations in localStorage everytime state changes
   useEffect(() => {
     localStorage.setItem('targetData', JSON.stringify(targetData));
   }, [targetData]);
 
+  // get updated locations in localStorage everytime state changes
   useEffect(() => {
     JSON.parse(localStorage.getItem('targetData'));
   }, [targetData]);
 
+  // save updated locations in localStorage everytime state changes
   useEffect(() => {
     localStorage.setItem('targetData', JSON.stringify(targetData));
     //setIsDeleted(false);
   }, [isDeleted]);
 
+  // get targetLocation from input field
   function onChangeTargetLocation(event) {
     setTargetLocation(event.target.value);
+    console.log('targetLocation', targetLocation);
   }
-
+  // use baseLocation and targetLocation to request time
   function getTargetLocation(event) {
     event.preventDefault();
     axios
@@ -95,27 +87,20 @@ export default function App() {
           ...prevstate,
           response.data.target_location,
         ]);
-        console.log(
-          'response.data.target_location',
-          response.data.target_location
-        );
       });
-    console.log('targetLocation', targetLocation);
-    console.log('targetData', targetData);
     setTargetLocation('');
   }
 
-  // delete time items
-  function handleDeleteTimeItems(event) {
-    targetData.splice(event.target.dataset.id, 1);
+  // delete new location items
+  function handleDeleteTimeItems(event, index) {
+    event.preventDefault();
+    targetData.splice(index, 1);
     setIsDeleted(true);
-    console.log('delete', event);
-    console.log('isDeleted', isDeleted);
   }
 
   const timeItems = targetData?.map((item, index) => {
     return (
-      <div className="time-el bg-gray-dark p-7 rounded-lg">
+      <div key={index} className="time-el bg-gray-dark p-7 rounded-lg">
         <div className="flex items-start justify-between">
           <p className="capitalize location text-2xl text-gray-200 mb-2 basis-6/7 font-light">
             {item.requested_location}
@@ -125,8 +110,7 @@ export default function App() {
             </span>
           </p>
           <button
-            onClick={handleDeleteTimeItems}
-            data-id={index}
+            onClick={(event) => handleDeleteTimeItems(event, index)}
             className="button basis-1/7 text-gray-600 hover:bg-sky-700"
           >
             <img
@@ -153,14 +137,16 @@ export default function App() {
       </div>
     );
   });
-  //console.log('date', date);
+
   return (
     <div className="App">
       <div className="container mx-auto">
-        <h1 className="logo text-white text-3xl py-7 font-bold">TimeKeeper</h1>
+        <h1 className="logo text-white text-3xl py-7 font-bold pl-10">
+          TimeKeeper
+        </h1>
         <div className="main p-10 bg-gray-medium rounded-lg ">
-          <div className="pb-10 grid grid-cols-1 col-auto md:grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="target-location space-x-0 items-center justify-start lg:flex md:max-xl:flex-col sm:space-x-3">
+          <div className="pb-10 ">
+            <div className="target-location space-x-0 items-center justify-start lg:flex  sm:space-x-3">
               <form
                 className="flex items-center mb-3 sm:mb-0"
                 onSubmit={getTargetLocation}
@@ -177,7 +163,7 @@ export default function App() {
                 </button>
               </form>
 
-              <div className="ml-0" onMouseLeave={-0.25}>
+              <div>
                 {' '}
                 <Button name="Change time" />
                 <Button name="Reset" />
@@ -193,6 +179,8 @@ export default function App() {
                 baseData={baseData}
                 setBaseData={setBaseData}
                 date={date}
+                setIsShowing={setIsShowing}
+                isShowing={isShowing}
               />
             }
             {targetData && timeItems}
