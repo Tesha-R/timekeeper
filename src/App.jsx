@@ -5,8 +5,10 @@ import axios from 'axios';
 import './App.css';
 
 import BaseLocation from './components/BaseLocation';
+import TimeBox from './components/TimeBox';
 import Button from './components/Button';
 import CloseFilled from './assets/CloseFilled.svg';
+import blank from './assets/blank.svg';
 
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
@@ -100,41 +102,22 @@ export default function App() {
 
   const timeItems = targetData?.map((item, index) => {
     return (
-      <div key={index} className="time-el bg-gray-dark p-7 rounded-lg">
-        <div className="flex items-start justify-between">
-          <p className="capitalize location text-2xl text-gray-200 mb-2 basis-6/7 font-light">
-            {item.requested_location}
-            <span className="text-2xl text-gray-700">
-              {' '}
-              {item.timezone_abbreviation}
-            </span>
-          </p>
-          <button
-            onClick={(event) => handleDeleteTimeItems(event, index)}
-            className="button basis-1/7 text-gray-600 hover:bg-sky-700"
-          >
-            <img
-              src={CloseFilled}
-              className="w-8 text-gray-300"
-              alt="close icon"
-            />
-          </button>
-        </div>
-
-        <p className="text-6xl sm:text-7xl  text-white mb-2 lowercase flex items-center ">
-          {' '}
-          {`${formatInTimeZone(date, item.timezone_location, 'h')}`}{' '}
-          <span className="animate-pulse pb-3">{`${formatInTimeZone(
-            date,
-            item.timezone_location,
-            ':'
-          )}`}</span>
-          {formatInTimeZone(date, item.timezone_location, 'mm a')}
-        </p>
-        <p className="text-gray-400 text-2xl font-light md:text-3xl">
-          {formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
-        </p>
-      </div>
+      <TimeBox
+        key={index}
+        location={item.requested_location}
+        timezone={item.timezone_abbreviation}
+        iconMapPin={blank}
+        eventHandler={(event) => handleDeleteTimeItems(event, index)}
+        iconDelete={CloseFilled}
+        hours={`${formatInTimeZone(date, item.timezone_location, 'h')}`}
+        locationSemiColon={`${formatInTimeZone(
+          date,
+          item.timezone_location,
+          ':'
+        )}`}
+        minutes={formatInTimeZone(date, item.timezone_location, 'mm a')}
+        day={formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
+      />
     );
   });
 
@@ -162,7 +145,6 @@ export default function App() {
                   Add city
                 </button>
               </form>
-
               <div>
                 {' '}
                 <Button name="Change time" />
