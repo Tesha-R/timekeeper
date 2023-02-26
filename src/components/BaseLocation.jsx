@@ -3,7 +3,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
 
 import MapPin from '../assets/MapPin.svg';
-import CloseFilled from '../assets/CloseFilled.svg';
+import closeWhite from '../assets/closeWhite.svg';
 import TimeBox from './TimeBox';
 
 function BaseLocation(props) {
@@ -104,7 +104,7 @@ function BaseLocation(props) {
           timezone={props.baseData?.timezone_abbreviation}
           iconMapPin={MapPin}
           eventHandler={() => handleDeleteBaseData()}
-          iconDelete={CloseFilled}
+          iconDelete={closeWhite}
           hours={`${formatInTimeZone(
             props.date,
             props.baseData?.timezone_location,

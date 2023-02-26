@@ -6,9 +6,9 @@ import './App.css';
 
 import BaseLocation from './components/BaseLocation';
 import TimeBox from './components/TimeBox';
-import Button from './components/Button';
-import CloseFilled from './assets/CloseFilled.svg';
+import closeWhite from './assets/closeWhite.svg';
 import blank from './assets/blank.svg';
+import TimeChange from './components/TimeChange';
 
 export default function App() {
   const [isDeleted, setIsDeleted] = useState(false); // delete location
@@ -37,7 +37,34 @@ export default function App() {
     return locations || '';
   });
 
-  // // CLOCK
+  const [baseDateVal, setBaseDateVal] = useState('');
+  const [baseTimeVal, setBaseTimeVal] = useState('');
+
+  const [isTimeChanged, setIsTimeChanged] = useState(false);
+
+  function onBaseDateChange(e) {
+    setBaseDateVal(e.target.value);
+  }
+  function onBaseTimeChange(e) {
+    setBaseTimeVal(e.target.value);
+  }
+  let data = `${baseDateVal} ${baseTimeVal}`;
+
+  function onChangeTimeSubmit(e) {
+    e.preventDefault();
+    setIsTimeChanged(true);
+    // console.log('isTimeChanged', isTimeChanged);
+  }
+
+  function handleClearTime(e) {
+    e.preventDefault();
+    data = '';
+    setBaseDateVal('');
+    setBaseTimeVal('');
+    setIsTimeChanged(false);
+  }
+
+  // CLOCK
   const [date, setDate] = useState(new Date());
 
   function refreshClock() {
@@ -100,24 +127,61 @@ export default function App() {
     setIsDeleted(true);
   }
 
+  const timeChangeItems = targetData?.map((item, index) => {
+    return (
+      isTimeChanged && (
+        <TimeBox
+          key={index}
+          location={item.requested_location}
+          timezone={item.timezone_abbreviation}
+          iconMapPin={blank}
+          eventHandler={(event) => handleDeleteTimeItems(event, index)}
+          iconDelete={closeWhite}
+          hours={`${formatInTimeZone(
+            new Date(data),
+            item.timezone_location,
+            'h'
+          )}`}
+          locationSemiColon={`${formatInTimeZone(
+            new Date(data),
+            item.timezone_location,
+            ':'
+          )}`}
+          minutes={formatInTimeZone(
+            new Date(data),
+            item.timezone_location,
+            'mm a'
+          )}
+          day={formatInTimeZone(
+            new Date(data),
+            item.timezone_location,
+            'E, LLL d'
+          )}
+        />
+      )
+    );
+  });
+
   const timeItems = targetData?.map((item, index) => {
     return (
-      <TimeBox
-        key={index}
-        location={item.requested_location}
-        timezone={item.timezone_abbreviation}
-        iconMapPin={blank}
-        eventHandler={(event) => handleDeleteTimeItems(event, index)}
-        iconDelete={CloseFilled}
-        hours={`${formatInTimeZone(date, item.timezone_location, 'h')}`}
-        locationSemiColon={`${formatInTimeZone(
-          date,
-          item.timezone_location,
-          ':'
-        )}`}
-        minutes={formatInTimeZone(date, item.timezone_location, 'mm a')}
-        day={formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
-      />
+      !isTimeChanged && (
+        <TimeBox
+          key={index}
+          location={item.requested_location}
+          timezone={item.timezone_abbreviation}
+          iconMapPin={blank}
+          eventHandler={(event) => handleDeleteTimeItems(event, index)}
+          iconDelete={closeWhite}
+          hours={`${formatInTimeZone(date, item.timezone_location, 'h')}`}
+          locationSemiColon={`${formatInTimeZone(
+            date,
+            item.timezone_location,
+            ':'
+          )}`}
+          minutes={formatInTimeZone(date, item.timezone_location, 'mm a')}
+          day={formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
+        />
+      )
     );
   });
 
@@ -129,26 +193,45 @@ export default function App() {
         </h1>
         <div className="main p-10 bg-gray-medium rounded-lg ">
           <div className="pb-10 ">
-            <div className="target-location space-x-0 items-center justify-start lg:flex  sm:space-x-3">
+            <div className="target-location space-x-0 items-end justify-start lg:flex  sm:space-x-3">
               <form
-                className="flex items-center mb-3 sm:mb-0"
+                className="flex items-end mb-3 sm:mb-0"
                 onSubmit={getTargetLocation}
               >
-                <input
-                  type="text"
-                  name="new-location"
-                  onChange={onChangeTargetLocation}
-                  className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half 
+                <div>
+                  <label className="block text-sm font-medium text-white">
+                    Location
+                  </label>
+                  <input
+                    type="text"
+                    name="new-location"
+                    onChange={onChangeTargetLocation}
+                    className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half 
                   rounded-l-md focus:ring-1  px-5 py-2"
-                />
+                  />
+                </div>
                 <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
                   Add city
                 </button>
               </form>
               <div>
                 {' '}
-                <Button name="Change time" />
-                <Button name="Reset" />
+                <TimeChange
+                  onSubmit={onChangeTimeSubmit}
+                  onDateChange={onBaseDateChange}
+                  inputDateVal={baseDateVal}
+                  onTimeChange={onBaseTimeChange}
+                  inputTimeVal={baseTimeVal}
+                />
+              </div>
+              <div>
+                {' '}
+                <button
+                  onClick={handleClearTime}
+                  className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-md font-light mr-3"
+                >
+                  Reset
+                </button>
               </div>
             </div>
           </div>
@@ -166,6 +249,7 @@ export default function App() {
               />
             }
             {targetData && timeItems}
+            {timeChangeItems ? timeChangeItems : timeItems}
           </div>
         </div>
       </div>
