@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 import axios from 'axios';
 
@@ -118,7 +118,7 @@ function BaseLocation(props) {
           minutes={formatInTimeZone(
             props.date,
             props.baseData?.timezone_location,
-            'mm:ss a'
+            'mm a'
           )}
           day={formatInTimeZone(
             props.date,

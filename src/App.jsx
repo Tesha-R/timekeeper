@@ -48,7 +48,8 @@ export default function App() {
   function onBaseTimeChange(e) {
     setBaseTimeVal(e.target.value);
   }
-  let data = `${baseDateVal} ${baseTimeVal}`;
+  let data = `${baseDateVal} ${baseTimeVal}`; // date and time input
+  let newDate = new Date(data); // new date from data input
 
   function onChangeTimeSubmit(e) {
     e.preventDefault();
@@ -193,7 +194,7 @@ export default function App() {
         </h1>
         <div className="main p-10 bg-gray-medium rounded-lg ">
           <div className="pb-10 ">
-            <div className="target-location space-x-0 items-end justify-start lg:flex  sm:space-x-3">
+            <div className="target-location space-x-0 items-end justify-start lg:flex sm:space-x-3">
               <form
                 className="flex items-end mb-3 sm:mb-0"
                 onSubmit={getTargetLocation}
@@ -243,7 +244,7 @@ export default function App() {
                 setBaseLocation={setBaseLocation}
                 baseData={baseData}
                 setBaseData={setBaseData}
-                date={date}
+                date={isTimeChanged ? newDate : date}
                 setIsShowing={setIsShowing}
                 isShowing={isShowing}
               />

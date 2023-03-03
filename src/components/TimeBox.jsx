@@ -24,7 +24,7 @@ function TimeBox(props) {
           </button>
         </p>
       </div>
-      <p className="text-6xl sm:text-7xl  text-white mb-2 lowercase flex items-center ">
+      <p className="text-6xl md:max-xl:text-6xl sm:text-7xl  text-white mb-2 lowercase flex items-center ">
         {props.hours}
 
         <span className="animate-pulse pb-3">{props.locationSemiColon}</span>
