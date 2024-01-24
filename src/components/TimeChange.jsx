@@ -4,8 +4,14 @@ function TimeChange(props) {
       <form onSubmit={props.onSubmit}>
         <div className="flex items-end space-x-3">
           <div>
-            <label className="block text-sm font-medium text-white">Date</label>
+            <label
+              htmlFor="changeDate"
+              className="block text-sm font-medium text-white"
+            >
+              Date
+            </label>
             <input
+              id="changeDate"
               type="date"
               name="date"
               onChange={props.onDateChange}
@@ -14,8 +20,14 @@ function TimeChange(props) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white">Time</label>
+            <label
+              htmlFor="changeTime"
+              className="block text-sm font-medium text-white"
+            >
+              Time
+            </label>
             <input
+              id="changeTime"
               type="time"
               name="time"
               onChange={props.onTimeChange}

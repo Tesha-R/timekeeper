@@ -11,35 +11,51 @@ function BaseLocation(props) {
   const onChangeBaseLocation = (event) => {
     props.setBaseLocation(event.target.value);
   };
+  // Extracted API call function
+  const fetchLocationData = async (apiKey, region) => {
+    const response = await axios.get(
+      `https://timezone.abstractapi.com/v1/current_time?api_key=${apiKey}&location=${region}`
+    );
+    return response.data;
+  };
 
   // get users time automatically
   useEffect(() => {
-    async function getDateTimeAutomatically() {
+    const getDateTimeAutomatically = async () => {
+      // Check if baseLocation is already set
+      if (props.baseLocation) {
+        return; // If baseLocation is already set, no need to fetch again
+      }
+
       try {
-        let response1 = await axios.get(
+        const response1 = await axios.get(
           `https://extreme-ip-lookup.com/json/?key=${
             import.meta.env.VITE_API_IP_URL
           }`
         );
-        let response2 = await axios.get(
-          `https://timezone.abstractapi.com/v1/current_time?api_key=${
-            import.meta.env.VITE_API_URL
-          }&location=${response1.data.region}`
+        const baseData = await fetchLocationData(
+          import.meta.env.VITE_API_URL,
+          response1.data.region
         );
         props.setBaseLocation(response1.data.region);
-        props.setBaseData(response2.data);
+        props.setBaseData(baseData);
         props.setIsShowing(false);
         localStorage.setItem(
           'baseLocation',
           JSON.stringify(response1.data.region)
         );
-        localStorage.setItem('baseData', JSON.stringify(response2.data));
+        localStorage.setItem('baseData', JSON.stringify(baseData));
       } catch (error) {
-        console.log('error ', error.message);
+        console.error('An error occurred while fetching data');
       }
-    }
+    };
     getDateTimeAutomatically();
-  }, []);
+  }, [
+    props.baseLocation,
+    props.setBaseLocation,
+    props.setBaseData,
+    props.setIsShowing,
+  ]);
 
   // use baseLocation to request time
   async function getBaseTimeData(event) {
@@ -60,7 +76,8 @@ function BaseLocation(props) {
         JSON.stringify(response.data.requested_location)
       );
     } catch (error) {
-      console.error('ERROR - getBaseTimeData', error);
+      //console.error('ERROR - getBaseTimeData', error);
+      console.error('ERROR - getBaseTimeData');
     }
   }
 

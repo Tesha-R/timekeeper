@@ -78,25 +78,10 @@ export default function App() {
     };
   }, []);
 
-  // get updated locations in localStorage everytime state changes
-  useEffect(() => {
-    JSON.parse(localStorage.getItem('baseData'));
-  }, [baseData]);
-
   // save new locations in localStorage everytime state changes
   useEffect(() => {
     localStorage.setItem('targetData', JSON.stringify(targetData));
   }, [targetData]);
-
-  // get updated locations in localStorage everytime state changes
-  useEffect(() => {
-    JSON.parse(localStorage.getItem('targetData'));
-  }, [targetData]);
-
-  // save updated locations in localStorage everytime state changes
-  useEffect(() => {
-    localStorage.setItem('targetData', JSON.stringify(targetData));
-  }, [isDeleted]);
 
   // get targetLocation from input field
   function onChangeTargetLocation(event) {
@@ -200,10 +185,14 @@ export default function App() {
                 onSubmit={getTargetLocation}
               >
                 <div>
-                  <label className="block text-sm font-medium text-white">
+                  <label
+                    htmlFor="newLocation"
+                    className="block text-sm font-medium text-white"
+                  >
                     Location
                   </label>
                   <input
+                    id="newLocation"
                     type="text"
                     name="new-location"
                     onChange={onChangeTargetLocation}
