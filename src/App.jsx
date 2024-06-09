@@ -109,7 +109,11 @@ export default function App() {
   // delete new location items
   function handleDeleteTimeItems(event, index) {
     event.preventDefault();
-    targetData.splice(index, 1);
+    setTargetData((prevState) => {
+      const updatedData = [...prevState];
+      updatedData.splice(index, 1);
+      return updatedData;
+    });
     setIsDeleted(true);
   }
 
