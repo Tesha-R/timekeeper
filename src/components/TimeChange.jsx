@@ -30,7 +30,7 @@ function TimeChange(props) {
               name="time"
               onChange={props.onTimeChange}
               value={props.inputTimeVal}
-              className="px-3 py-2 bg-white  placeholder-slate-400 rounded-md"
+              className="border border-gray-300 px-5 py-2 bg-white  placeholder-slate-400 rounded-md focus:outline-none focus:border-sky-700 focus:ring-sky-700"
             />
           </div>
           <div>
