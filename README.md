@@ -15,7 +15,7 @@ Timekeeper is an application to help you visualize time across different time zo
 
 ## Usage
 
-1. Enter a location (e.g., Los Angeles, CA) in the "Location" input field and click "Add location" to view the current time in that location.
+1. Enter a location (e.g., Los Angeles, CA) in the "Location" input field and click "Add" to view the current time in that location.
 2. Change the base time using the time picker to see the corresponding times in other locations.
 3. Use the reset button to clear the time change and view the current times again.
 4. Click the delete icon top right on any location to remove it from the list.
