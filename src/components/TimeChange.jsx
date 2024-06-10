@@ -5,22 +5,6 @@ function TimeChange(props) {
         <div className="flex items-end space-x-3">
           <div>
             <label
-              htmlFor="changeDate"
-              className="block text-sm font-medium text-white"
-            >
-              Date
-            </label>
-            <input
-              id="changeDate"
-              type="date"
-              name="date"
-              onChange={props.onDateChange}
-              value={props.inputDateVal}
-              className="px-3 py-2 bg-white  placeholder-slate-400 rounded-md"
-            />
-          </div>
-          <div>
-            <label
               htmlFor="changeTime"
               className="block text-sm font-medium text-white"
             >

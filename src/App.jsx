@@ -37,30 +37,32 @@ export default function App() {
     return locations || '';
   });
 
-  const [baseDateVal, setBaseDateVal] = useState('');
   const [baseTimeVal, setBaseTimeVal] = useState('');
 
   const [isTimeChanged, setIsTimeChanged] = useState(false);
 
-  function onBaseDateChange(e) {
-    setBaseDateVal(e.target.value);
-  }
   function onBaseTimeChange(e) {
     setBaseTimeVal(e.target.value);
   }
-  let data = `${baseDateVal} ${baseTimeVal}`; // date and time input
-  let newDate = new Date(data); // new date from data input
+
+  // Changed: Always use today's date combined with the selected time
+  let today = new Date(); // always use today's date
+  let timeParts = baseTimeVal.split(':');
+  let newDate = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    timeParts[0],
+    timeParts[1]
+  );
 
   function onChangeTimeSubmit(e) {
     e.preventDefault();
     setIsTimeChanged(true);
-    // console.log('isTimeChanged', isTimeChanged);
   }
 
   function handleClearTime(e) {
     e.preventDefault();
-    data = '';
-    setBaseDateVal('');
     setBaseTimeVal('');
     setIsTimeChanged(false);
   }
@@ -127,26 +129,14 @@ export default function App() {
           iconMapPin={blank}
           eventHandler={(event) => handleDeleteTimeItems(event, index)}
           iconDelete={closeWhite}
-          hours={`${formatInTimeZone(
-            new Date(data),
-            item.timezone_location,
-            'h'
-          )}`}
+          hours={`${formatInTimeZone(newDate, item.timezone_location, 'h')}`}
           locationSemiColon={`${formatInTimeZone(
-            new Date(data),
+            newDate,
             item.timezone_location,
             ':'
           )}`}
-          minutes={formatInTimeZone(
-            new Date(data),
-            item.timezone_location,
-            'mm a'
-          )}
-          day={formatInTimeZone(
-            new Date(data),
-            item.timezone_location,
-            'E, LLL d'
-          )}
+          minutes={formatInTimeZone(newDate, item.timezone_location, 'mm a')}
+          day={formatInTimeZone(newDate, item.timezone_location, 'E, LLL d')}
         />
       )
     );
@@ -200,8 +190,7 @@ export default function App() {
                     type="text"
                     name="new-location"
                     onChange={onChangeTargetLocation}
-                    className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half 
-                  rounded-l-md focus:ring-1  px-5 py-2"
+                    className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half rounded-l-md focus:ring-1  px-5 py-2"
                   />
                 </div>
                 <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
@@ -209,17 +198,13 @@ export default function App() {
                 </button>
               </form>
               <div>
-                {' '}
                 <TimeChange
                   onSubmit={onChangeTimeSubmit}
-                  onDateChange={onBaseDateChange}
-                  inputDateVal={baseDateVal}
                   onTimeChange={onBaseTimeChange}
                   inputTimeVal={baseTimeVal}
                 />
               </div>
               <div>
-                {' '}
                 <button
                   onClick={handleClearTime}
                   className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-md font-light mr-3"
