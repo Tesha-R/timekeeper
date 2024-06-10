@@ -198,6 +198,7 @@ export default function App() {
                     Location
                   </label>
                   <input
+                    placeholder="(e.g., Los Angeles, CA)"
                     id="newLocation"
                     type="text"
                     name="new-location"
@@ -206,7 +207,7 @@ export default function App() {
                   />
                 </div>
                 <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
-                  Add city
+                  Add location
                 </button>
               </form>
               <div>
