@@ -1,3 +1,17 @@
+// TimeChange.jsx
+
+/**
+ * TimeChange Component
+ *
+ * This component renders a form with a time input and a button to submit the selected time.
+ * It allows the user to select a time and submit it to update the time displayed in other components.
+ *
+ * Props:
+ * - onSubmit: Function to handle the form submission.
+ * - onTimeChange: Function to handle changes to the time input.
+ * - inputTimeVal: The current value of the time input.
+ */
+
 function TimeChange(props) {
   return (
     <div className="flex justify-between mb-3 sm:mb-0">

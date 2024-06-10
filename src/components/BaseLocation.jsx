@@ -6,6 +6,22 @@ import MapPin from '../assets/MapPin.svg';
 import closeWhite from '../assets/closeWhite.svg';
 import TimeBox from './TimeBox';
 
+/**
+ * BaseLocation Component
+ *
+ * This component handles the base location for the timekeeper app. It allows the user to set their current location,
+ * automatically fetches the user's location and time, and displays the current time for the base location.
+ *
+ * Props:
+ * - baseLocation: The current base location.
+ * - setBaseLocation: Function to update the base location.
+ * - baseData: The data for the base location.
+ * - setBaseData: Function to update the base location data.
+ * - isShowing: Boolean to control the visibility of the location input form.
+ * - setIsShowing: Function to update the visibility of the location input form.
+ * - date: The current date and time.
+ */
+
 function BaseLocation(props) {
   // get baseLocation from input field
   const onChangeBaseLocation = (event) => {

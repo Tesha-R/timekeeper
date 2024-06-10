@@ -10,43 +10,54 @@ import closeWhite from './assets/closeWhite.svg';
 import blank from './assets/blank.svg';
 import TimeChange from './components/TimeChange';
 
+/**
+ * App Component
+ *
+ * This component serves as the main application component for the TimeKeeper app.
+ * It handles the state and logic for managing base location, target locations,
+ * and changing the displayed time.
+ */
+
 export default function App() {
-  const [isDeleted, setIsDeleted] = useState(false); // delete location
-  const [isShowing, setIsShowing] = useState(false); // show form for baseLocation
+  // State for managing whether a location was deleted
+  const [isDeleted, setIsDeleted] = useState(false);
+  // State for managing the visibility of the base location form
+  const [isShowing, setIsShowing] = useState(false);
+  // State for managing the target location
+  const [targetLocation, setTargetLocation] = useState('');
 
-  const [targetLocation, setTargetLocation] = useState(''); // set new targetLocation
-
-  // set new baseLocation
+  // State for managing the base location, initialized from localStorag
   const [baseLocation, setBaseLocation] = useState(() => {
     const saved = localStorage.getItem('baseLocation');
     const locations = JSON.parse(saved);
     return locations || '';
   });
 
-  // save array of new locations data in localStorage
+  // State for managing an array of target locations, initialized from localStorage
   const [targetData, setTargetData] = useState(() => {
     const saved = localStorage.getItem('targetData');
     const locations = JSON.parse(saved);
     return locations || [];
   });
 
-  // save base location data in localStorage to render
+  // State for managing the base location data, initialized from localStorage
   const [baseData, setBaseData] = useState(() => {
     const saved = localStorage.getItem('baseData');
     const locations = JSON.parse(saved);
     return locations || '';
   });
-
+  // State for managing the time input value for the base location
   const [baseTimeVal, setBaseTimeVal] = useState('');
 
+  // State for managing whether the time has been changed
   const [isTimeChanged, setIsTimeChanged] = useState(false);
 
+  // Function to handle changes to the base time input
   function onBaseTimeChange(e) {
     setBaseTimeVal(e.target.value);
   }
-
-  // Changed: Always use today's date combined with the selected time
-  let today = new Date(); // always use today's date
+  // Combine today's date with the selected time to create a new Date object
+  let today = new Date();
   let timeParts = baseTimeVal.split(':');
   let newDate = new Date(
     today.getFullYear(),
@@ -55,12 +66,12 @@ export default function App() {
     timeParts[0],
     timeParts[1]
   );
-
+  // Function to handle the submission of the time change form
   function onChangeTimeSubmit(e) {
     e.preventDefault();
     setIsTimeChanged(true);
   }
-
+  // Function to reset the time change form
   function handleClearTime(e) {
     e.preventDefault();
     setBaseTimeVal('');
@@ -68,8 +79,9 @@ export default function App() {
   }
 
   // CLOCK
+  // State and function to manage the current date and time
   const [date, setDate] = useState(new Date());
-
+  // Function to refresh the clock every second
   function refreshClock() {
     setDate(new Date());
   }
@@ -80,7 +92,7 @@ export default function App() {
     };
   }, []);
 
-  // save new locations in localStorage everytime state changes
+  // Save new locations in localStorage whenever targetData changes
   useEffect(() => {
     localStorage.setItem('targetData', JSON.stringify(targetData));
   }, [targetData]);
@@ -90,7 +102,7 @@ export default function App() {
     setTargetLocation(event.target.value);
   }
 
-  // use baseLocation and targetLocation to request time
+  // Function to use baseLocation and targetLocation to request time data
   function getTargetLocation(event) {
     event.preventDefault();
     axios
