@@ -112,14 +112,10 @@ export default function App() {
         }&location=${targetLocation}`
       )
       .then((response) => {
-        console.log('respones', response.data);
         setTargetData((prevstate) => [...prevstate, response.data]);
       });
 
     setTargetLocation('');
-
-    console.log('target location', targetLocation);
-    console.log('target data', targetData);
   }
 
   // delete new location items
@@ -133,28 +129,24 @@ export default function App() {
     setIsDeleted(true);
   }
 
-  // const timeChangeItems = targetData?.map((item, index) => {
-  //   return (
-  //     isTimeChanged && (
-  //       <TimeBox
-  //         key={index}
-  //         location={item.requested_location}
-  //         timezone={item.timezone_abbreviation}
-  //         iconMapPin={blank}
-  //         eventHandler={(event) => handleDeleteTimeItems(event, index)}
-  //         iconDelete={closeWhite}
-  //         hours={`${formatInTimeZone(newDate, item.timezone_location, 'h')}`}
-  //         locationSemiColon={`${formatInTimeZone(
-  //           newDate,
-  //           item.timezone_location,
-  //           ':'
-  //         )}`}
-  //         minutes={formatInTimeZone(newDate, item.timezone_location, 'mm a')}
-  //         day={formatInTimeZone(newDate, item.timezone_location, 'E, LLL d')}
-  //       />
-  //     )
-  //   );
-  // });
+  const timeChangeItems = targetData?.map((item, index) => {
+    return (
+      isTimeChanged && (
+        <TimeBox
+          key={index}
+          location={item.geo.location}
+          timezone={item.timezone}
+          iconMapPin={blank}
+          eventHandler={(event) => handleDeleteTimeItems(event, index)}
+          iconDelete={closeWhite}
+          hours={`${formatInTimeZone(newDate, item.timezone, 'h')}`}
+          locationSemiColon={`${formatInTimeZone(newDate, item.timezone, ':')}`}
+          minutes={formatInTimeZone(newDate, item.timezone, 'mm a')}
+          day={formatInTimeZone(newDate, item.timezone, 'E, LLL d')}
+        />
+      )
+    );
+  });
 
   const timeItems = targetData?.map((item, index) => {
     return (
@@ -166,14 +158,10 @@ export default function App() {
           iconMapPin={blank}
           eventHandler={(event) => handleDeleteTimeItems(event, index)}
           iconDelete={closeWhite}
-          hours={`${formatInTimeZone(date, item.timezone_location, 'h')}`}
-          locationSemiColon={`${formatInTimeZone(
-            date,
-            item.timezone_location,
-            ':'
-          )}`}
-          minutes={formatInTimeZone(date, item.timezone_location, 'mm a')}
-          day={formatInTimeZone(date, item.timezone_location, 'E, LLL d')}
+          hours={`${formatInTimeZone(date, item.timezone, 'h')}`}
+          locationSemiColon={`${formatInTimeZone(date, item.timezone, ':')}`}
+          minutes={formatInTimeZone(date, item.timezone, 'mm a')}
+          day={formatInTimeZone(date, item.timezone, 'E, LLL d')}
         />
       )
     );
@@ -182,14 +170,14 @@ export default function App() {
   return (
     <div className="App">
       <div className="container mx-auto">
-        <h1 className="logo text-white text-3xl py-7 font-bold pl-10">
+        <h1 className="logo text-white text-3xl py-7 pl-10 font-bold md:pl-0">
           TimeKeeper
         </h1>
         <div className="main p-10 bg-gray-medium rounded-lg ">
           <div className="pb-10 ">
-            <div className="target-location space-x-0 items-end justify-start lg:flex sm:space-x-3">
+            <div className="target-location space-x-0 items-end justify-start lg:flex lg:space-x-3">
               <form
-                className="flex items-end mb-3 sm:mb-0"
+                className="flex items-end mb-3 lg:mb-0"
                 onSubmit={getTargetLocation}
               >
                 <div>
@@ -208,15 +196,19 @@ export default function App() {
                     className=" border border-gray-300 placeholder-slate-400 focus:outline-none focus:border-sky-700 focus:ring-sky-700 block w-half rounded-l-md focus:ring-1  px-5 py-2"
                   />
                 </div>
-                <button className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light">
+                <button
+                  disabled={!targetLocation}
+                  className="bg-gray-medium hover:bg-sky-700 border border-gray-300 px-5 py-2 text-gray-300 rounded-r-md font-light"
+                >
                   Add
                 </button>
               </form>
-              <div>
+              <div className="mb-3 lg:mb-0">
                 <TimeChange
                   onSubmit={onChangeTimeSubmit}
                   onTimeChange={onBaseTimeChange}
                   inputTimeVal={baseTimeVal}
+                  isDisabled={!baseTimeVal}
                 />
               </div>
               <div>
@@ -242,7 +234,7 @@ export default function App() {
               />
             }
             {targetData && timeItems}
-            {/* {timeChangeItems ? timeChangeItems : timeItems} */}
+            {timeChangeItems ? timeChangeItems : timeItems}
           </div>
         </div>
       </div>

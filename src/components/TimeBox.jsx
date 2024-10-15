@@ -4,10 +4,9 @@ function TimeBox(props) {
       <div className="flex items-start justify-between">
         <p className="flex space-x-4 capitalize location text-2xl text-gray-200 mb-2 basis-6/7 font-light">
           {props.location}
-          <span className="text-2xl text-gray-700 ml-1">{props.timezone}</span>
           <img
             src={props.iconMapPin}
-            className="w-8 text-gray-300"
+            className="w-6 text-gray-300 ml-2"
             alt="map pin icon"
           />
         </p>

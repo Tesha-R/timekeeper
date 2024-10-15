@@ -86,7 +86,6 @@ function BaseLocation(props) {
           import.meta.env.VITE_API_IPGEOLOCATION_URL
         }&location=${props.baseLocation}`
       );
-      console.log('response', response);
       props.setBaseData(response.data);
       props.setIsShowing(false);
       localStorage.setItem('baseData', JSON.stringify(response.data));
