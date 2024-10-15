@@ -22,8 +22,6 @@ import TimeBox from './TimeBox';
  * - date: The current date and time.
  */
 
-//   `https://timezone.abstractapi.com/v1/current_time?api_key=${apiKey}&location=${region}`
-
 function BaseLocation(props) {
   // get baseLocation from input field
   const onChangeBaseLocation = (event) => {
@@ -40,33 +38,47 @@ function BaseLocation(props) {
   // get users time automatically
   useEffect(() => {
     const getDateTimeAutomatically = async () => {
-      // Check if baseLocation is already set
-      if (props.baseLocation) {
-        return; // If baseLocation is already set, no need to fetch again
-      }
+      // If baseLocation is already set, skip fetching again
+      if (props.baseLocation) return;
 
       try {
+        // Attempt to fetch the IP lookup information
         const response1 = await axios.get(
           `https://extreme-ip-lookup.com/json/?key=${
             import.meta.env.VITE_API_IP_URL
           }`
         );
-        const baseData = await fetchLocationData(
-          import.meta.env.VITE_API_IPGEOLOCATION_URL,
-          response1.data.region
-        );
-        props.setBaseLocation(response1.data.region);
-        props.setBaseData(baseData);
-        props.setIsShowing(false);
-        localStorage.setItem(
-          'baseLocation',
-          JSON.stringify(response1.data.region)
-        );
-        localStorage.setItem('baseData', JSON.stringify(baseData));
+        // Ensure that response1 is defined and contains data
+        if (response1 && response1?.data && response1?.data.region) {
+          // Fetch timezone data using the base location from IP lookup
+          const baseData = await fetchLocationData(
+            import.meta.env.VITE_API_IPGEOLOCATION_URL,
+            response1?.data.region
+          );
+
+          // Update the state with the fetched data
+          props.setBaseLocation(response1?.data.region);
+          props.setBaseData(baseData);
+          props.setIsShowing(false);
+
+          // Save data in localStorage
+          localStorage.setItem(
+            'baseLocation',
+            JSON.stringify(response1?.data.region)
+          );
+          localStorage.setItem('baseData', JSON.stringify(baseData));
+        } else {
+          console.error('Invalid IP lookup response:', response1);
+        }
       } catch (error) {
-        console.error('An error occurred while fetching data');
+        // Log any error that occurred during the API request
+        console.error(
+          'An error occurred while fetching IP or location data:',
+          error
+        );
       }
     };
+
     getDateTimeAutomatically();
   }, [
     props.baseLocation,
@@ -135,8 +147,8 @@ function BaseLocation(props) {
         </div>
       ) : (
         <TimeBox
-          location={props.baseData?.geo.location}
-          timezone={props.baseData?.timezone}
+          location={props.baseData?.geo?.location ?? 'Unknown Location'} // Ensure baseData and geo exist, provide fallback
+          timezone={props.baseData?.timezone ?? 'Unknown Timezone'}
           iconMapPin={MapPin}
           eventHandler={() => handleDeleteBaseData()}
           iconDelete={closeWhite}

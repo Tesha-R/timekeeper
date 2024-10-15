@@ -113,9 +113,11 @@ export default function App() {
       )
       .then((response) => {
         setTargetData((prevstate) => [...prevstate, response.data]);
+        setTargetLocation('');
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
       });
-
-    setTargetLocation('');
   }
 
   // delete new location items
@@ -134,15 +136,15 @@ export default function App() {
       isTimeChanged && (
         <TimeBox
           key={index}
-          location={item.geo.location}
-          timezone={item.timezone}
+          location={item?.geo?.location ?? 'Unknown Location'} // Provide a fallback
+          timezone={item?.timezone ?? 'Unknown Timezone'} // Provide a fallback
           iconMapPin={blank}
           eventHandler={(event) => handleDeleteTimeItems(event, index)}
           iconDelete={closeWhite}
-          hours={`${formatInTimeZone(newDate, item.timezone, 'h')}`}
+          hours={`${formatInTimeZone(newDate, item?.timezone, 'h')}`}
           locationSemiColon={`${formatInTimeZone(newDate, item.timezone, ':')}`}
-          minutes={formatInTimeZone(newDate, item.timezone, 'mm a')}
-          day={formatInTimeZone(newDate, item.timezone, 'E, LLL d')}
+          minutes={formatInTimeZone(newDate, item?.timezone, 'mm a')}
+          day={formatInTimeZone(newDate, item?.timezone, 'E, LLL d')}
         />
       )
     );
@@ -153,15 +155,15 @@ export default function App() {
       !isTimeChanged && (
         <TimeBox
           key={index}
-          location={item.geo.location}
-          timezone={item.timezone}
+          location={item?.geo?.location}
+          timezone={item?.timezone}
           iconMapPin={blank}
           eventHandler={(event) => handleDeleteTimeItems(event, index)}
           iconDelete={closeWhite}
-          hours={`${formatInTimeZone(date, item.timezone, 'h')}`}
+          hours={`${formatInTimeZone(date, item?.timezone, 'h')}`}
           locationSemiColon={`${formatInTimeZone(date, item.timezone, ':')}`}
-          minutes={formatInTimeZone(date, item.timezone, 'mm a')}
-          day={formatInTimeZone(date, item.timezone, 'E, LLL d')}
+          minutes={formatInTimeZone(date, item?.timezone, 'mm a')}
+          day={formatInTimeZone(date, item?.timezone, 'E, LLL d')}
         />
       )
     );
@@ -188,6 +190,7 @@ export default function App() {
                     Location
                   </label>
                   <input
+                    value={targetLocation}
                     placeholder="(e.g., Los Angeles, CA)"
                     id="newLocation"
                     type="text"
