@@ -34,7 +34,6 @@ function BaseLocation(props) {
     const response = await axios.get(
       `https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${region}`
     );
-    console.log('initial request - fetchLocationData', response);
     return response.data;
   };
 
@@ -53,7 +52,7 @@ function BaseLocation(props) {
           }`
         );
         const baseData = await fetchLocationData(
-          import.meta.env.VITE_API_URL,
+          import.meta.env.VITE_API_IPGEOLOCATION_URL,
           response1.data.region
         );
         props.setBaseLocation(response1.data.region);
@@ -87,6 +86,7 @@ function BaseLocation(props) {
           import.meta.env.VITE_API_IPGEOLOCATION_URL
         }&location=${props.baseLocation}`
       );
+      console.log('response', response);
       props.setBaseData(response.data);
       props.setIsShowing(false);
       localStorage.setItem('baseData', JSON.stringify(response.data));
@@ -136,29 +136,29 @@ function BaseLocation(props) {
         </div>
       ) : (
         <TimeBox
-          location={props.baseData?.requested_location}
-          timezone={props.baseData?.timezone_abbreviation}
+          location={props.baseData?.geo.location}
+          timezone={props.baseData?.timezone}
           iconMapPin={MapPin}
           eventHandler={() => handleDeleteBaseData()}
           iconDelete={closeWhite}
           hours={`${formatInTimeZone(
             props.date,
-            props.baseData?.timezone_location,
+            props.baseData?.timezone,
             'h'
           )}`}
           locationSemiColon={`${formatInTimeZone(
             props.date,
-            props.baseData?.timezone_location,
+            props.baseData?.timezone,
             ':'
           )}`}
           minutes={formatInTimeZone(
             props.date,
-            props.baseData?.timezone_location,
+            props.baseData?.timezone,
             'mm a'
           )}
           day={formatInTimeZone(
             props.date,
-            props.baseData?.timezone_location,
+            props.baseData?.timezone,
             'E, LLL d'
           )}
         />

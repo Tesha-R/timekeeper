@@ -105,7 +105,6 @@ export default function App() {
   // Function to use baseLocation and targetLocation to request time data
   function getTargetLocation(event) {
     event.preventDefault();
-    //https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${region} &target_location=${targetLocation}`
     axios
       .get(
         `https://api.ipgeolocation.io/timezone?apiKey=${
@@ -158,7 +157,6 @@ export default function App() {
   // });
 
   const timeItems = targetData?.map((item, index) => {
-    console.log('item', item);
     return (
       !isTimeChanged && (
         <TimeBox
@@ -231,8 +229,7 @@ export default function App() {
               </div>
             </div>
           </div>
-          {timeItems}
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {
               <BaseLocation
                 baseLocation={baseLocation}
@@ -245,8 +242,8 @@ export default function App() {
               />
             }
             {targetData && timeItems}
-            {timeChangeItems ? timeChangeItems : timeItems}
-          </div> */}
+            {/* {timeChangeItems ? timeChangeItems : timeItems} */}
+          </div>
         </div>
       </div>
     </div>
