@@ -22,6 +22,8 @@ import TimeBox from './TimeBox';
  * - date: The current date and time.
  */
 
+//   `https://timezone.abstractapi.com/v1/current_time?api_key=${apiKey}&location=${region}`
+
 function BaseLocation(props) {
   // get baseLocation from input field
   const onChangeBaseLocation = (event) => {
@@ -30,8 +32,9 @@ function BaseLocation(props) {
   // Extracted API call function
   const fetchLocationData = async (apiKey, region) => {
     const response = await axios.get(
-      `https://timezone.abstractapi.com/v1/current_time?api_key=${apiKey}&location=${region}`
+      `https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${region}`
     );
+    console.log('initial request - fetchLocationData', response);
     return response.data;
   };
 
@@ -80,8 +83,8 @@ function BaseLocation(props) {
     }
     try {
       const response = await axios.get(
-        `https://timezone.abstractapi.com/v1/current_time?api_key=${
-          import.meta.env.VITE_API_URL
+        `https://api.ipgeolocation.io/timezone?apiKey=${
+          import.meta.env.VITE_API_IPGEOLOCATION_URL
         }&location=${props.baseLocation}`
       );
       props.setBaseData(response.data);

@@ -105,19 +105,22 @@ export default function App() {
   // Function to use baseLocation and targetLocation to request time data
   function getTargetLocation(event) {
     event.preventDefault();
+    //https://api.ipgeolocation.io/timezone?apiKey=${apiKey}&location=${region} &target_location=${targetLocation}`
     axios
       .get(
-        `https://timezone.abstractapi.com/v1/convert_time?api_key=${
-          import.meta.env.VITE_API_URL
-        }&base_location=${baseLocation}&target_location=${targetLocation}`
+        `https://api.ipgeolocation.io/timezone?apiKey=${
+          import.meta.env.VITE_API_IPGEOLOCATION_URL
+        }&location=${targetLocation}`
       )
       .then((response) => {
-        setTargetData((prevstate) => [
-          ...prevstate,
-          response.data.target_location,
-        ]);
+        console.log('respones', response.data);
+        setTargetData((prevstate) => [...prevstate, response.data]);
       });
+
     setTargetLocation('');
+
+    console.log('target location', targetLocation);
+    console.log('target data', targetData);
   }
 
   // delete new location items
@@ -131,36 +134,37 @@ export default function App() {
     setIsDeleted(true);
   }
 
-  const timeChangeItems = targetData?.map((item, index) => {
-    return (
-      isTimeChanged && (
-        <TimeBox
-          key={index}
-          location={item.requested_location}
-          timezone={item.timezone_abbreviation}
-          iconMapPin={blank}
-          eventHandler={(event) => handleDeleteTimeItems(event, index)}
-          iconDelete={closeWhite}
-          hours={`${formatInTimeZone(newDate, item.timezone_location, 'h')}`}
-          locationSemiColon={`${formatInTimeZone(
-            newDate,
-            item.timezone_location,
-            ':'
-          )}`}
-          minutes={formatInTimeZone(newDate, item.timezone_location, 'mm a')}
-          day={formatInTimeZone(newDate, item.timezone_location, 'E, LLL d')}
-        />
-      )
-    );
-  });
+  // const timeChangeItems = targetData?.map((item, index) => {
+  //   return (
+  //     isTimeChanged && (
+  //       <TimeBox
+  //         key={index}
+  //         location={item.requested_location}
+  //         timezone={item.timezone_abbreviation}
+  //         iconMapPin={blank}
+  //         eventHandler={(event) => handleDeleteTimeItems(event, index)}
+  //         iconDelete={closeWhite}
+  //         hours={`${formatInTimeZone(newDate, item.timezone_location, 'h')}`}
+  //         locationSemiColon={`${formatInTimeZone(
+  //           newDate,
+  //           item.timezone_location,
+  //           ':'
+  //         )}`}
+  //         minutes={formatInTimeZone(newDate, item.timezone_location, 'mm a')}
+  //         day={formatInTimeZone(newDate, item.timezone_location, 'E, LLL d')}
+  //       />
+  //     )
+  //   );
+  // });
 
   const timeItems = targetData?.map((item, index) => {
+    console.log('item', item);
     return (
       !isTimeChanged && (
         <TimeBox
           key={index}
-          location={item.requested_location}
-          timezone={item.timezone_abbreviation}
+          location={item.geo.location}
+          timezone={item.timezone}
           iconMapPin={blank}
           eventHandler={(event) => handleDeleteTimeItems(event, index)}
           iconDelete={closeWhite}
@@ -227,8 +231,8 @@ export default function App() {
               </div>
             </div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {timeItems}
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {
               <BaseLocation
                 baseLocation={baseLocation}
@@ -242,7 +246,7 @@ export default function App() {
             }
             {targetData && timeItems}
             {timeChangeItems ? timeChangeItems : timeItems}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
