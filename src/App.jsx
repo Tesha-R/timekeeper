@@ -237,6 +237,18 @@ export default function App() {
             {timeChangeItems ? timeChangeItems : timeItems}
           </div>
         </div>
+        <div className="py-10">
+          <p className="text-gray-300">
+            🚀 Handcrafted by{' '}
+            <a
+              href="https://github.com/Tesha-R"
+              target="_blank"
+              className="text-indigo-300"
+            >
+              Tesha
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
